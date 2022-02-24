@@ -8,18 +8,14 @@ from flask import request
 import arrow  # Replacement for datetime, based on moment.js
 import acp_times  # Brevet time calculations
 import os
+import requests
+
 
 from pymongo_methods import insert, retreive
 ###
 # Globals
 ###
 app = flask.Flask(__name__)
-
-import mongoengine
-
-class Brevet(mongoengine.Document):
-    distant = mongoengine.FloatField(required=True)
-
 
 ###
 # Environmental Variables
@@ -88,5 +84,5 @@ def display():
 #############
 
 if __name__ == "__main__":
-    print("Opening for global access on port {}".format(api_port))
+    print("Opening  for global access on port {}".format(api_port))
     app.run(port=api_port, host="0.0.0.0")

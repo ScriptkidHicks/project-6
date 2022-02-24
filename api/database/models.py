@@ -1,22 +1,13 @@
+from xml.dom.minidom import Document
 from mongoengine import *
 
+class Checkpoint(Document):
+    distance = FloatField(required=True)
+    location = StringField()
+    open_time = DateTimeField(required=True)
+    close_time = DateTimeField(required=True)
 
-class Checkpoint:
-    """
-    A MongoEngine EmbeddedDocument containing:
-        distance: MongoEngine float field, required, (checkpoint distance in kilometers),
-		location: MongoEngine string field, optional, (checkpoint location name),
-		open_time: MongoEngine datetime field, required, (checkpoint opening time),
-		close_time: MongoEngine datetime field, required, (checkpoint closing time).
-    """
-    pass
-
-
-class Brevets:
-    """
-    A MongoEngine document containing:
-		length: MongoEngine float field, required
-		start_time: MongoEngine datetime field, required
-		checkpoints: MongoEngine list field of Checkpoints, required
-    """
-    pass
+class Brevet(Document):
+    length = FloatField(required=True)
+    start_time = DateTimeField(required=True)
+    checkpoints = ListField(Checkpoint, required=True)
