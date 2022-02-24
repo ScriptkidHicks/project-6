@@ -8,10 +8,6 @@ from flask import request
 import arrow  # Replacement for datetime, based on moment.js
 import acp_times  # Brevet time calculations
 import os
-import requests
-
-
-from pymongo_methods import insert, retreive
 ###
 # Globals
 ###
