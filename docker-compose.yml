@@ -26,3 +26,7 @@ services:
       DEBUG: "True"
   db:
     image: mongo:latest
+    ports:
+      - "5002: $MONGO_PORT"
+    environment:
+      - PORT: $MONGO_PORT
