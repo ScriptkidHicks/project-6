@@ -1,2 +1,2 @@
 from .brevet import BrevetAPI
-from .brevets import BrevetsApi
+from .brevets import BrevetsAPI

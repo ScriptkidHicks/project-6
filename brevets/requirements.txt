@@ -3,3 +3,4 @@ Flask
 nose
 pymongo
 mongoengine
+requests

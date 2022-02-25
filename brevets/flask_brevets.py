@@ -8,6 +8,7 @@ from flask import request
 import arrow  # Replacement for datetime, based on moment.js
 import acp_times  # Brevet time calculations
 import os
+import requests
 ###
 # Globals
 ###
@@ -17,7 +18,11 @@ app = flask.Flask(__name__)
 # Environmental Variables
 ###
 
-api_port = os.environ.get('API_PORT')
+BREVETS_PORT = os.environ.get('BREVETS_PORT')
+API_PORT = os.environ.get("API_PORT")
+
+print("api port ", API_PORT, flush=True)
+print("Brevets port", BREVETS_PORT, flush=True)
 
 ###
 # Pages
@@ -65,20 +70,17 @@ def _calc_times():
 
 @app.route("/submit", methods=['POST'])
 def Submit():
-    status = insert(request)
-    return flask.Response(status=status)
+    print("The Request ", request, flush=True)
+    r = requests.post(f"https://localhost:{API_PORT}", data={"length": "", "start_time": "", "checkpoints": ""})
+    print(r.status_code, flush=True)
+    return flask.Response(status=200)
 
 
 @app.route("/display")
 def display():
-    Start, Total, Controls = retreive()
-    if (Controls == 404):
-        return flask.jsonify(status=404, brevets={"Start": "", "Total": "", "Controls": ""})
-    elif (Controls == 500):
-        return flask.jsonify(status=500, brevets={"Start": "", "Total": "", "Controls": ""})
-    return flask.jsonify(brevets={"Start": Start, "Total": Total, "Controls": Controls})
+    return flask.jsonify(brevets={"Start": "", "Total": "", "Controls": ""}, status=200)
 #############
 
 if __name__ == "__main__":
-    print("Opening  for global access on port {}".format(api_port))
-    app.run(port=api_port, host="0.0.0.0")
+    print("Opening  for global access on port {}".format(BREVETS_PORT))
+    app.run(port=BREVETS_PORT, host="0.0.0.0")

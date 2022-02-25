@@ -1,5 +1,5 @@
 from flask import Response, request
-from ..database.models import Checkpoint, Brevet
+from database import Brevet
 from flask_restful import Resource
 
 class BrevetsAPI(Resource):
