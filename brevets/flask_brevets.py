@@ -70,15 +70,22 @@ def _calc_times():
 
 @app.route("/submit", methods=['POST'])
 def Submit():
+    print("The controls", request.form, flush=True)
     print("The Request ", request, flush=True)
-    r = requests.post(f"https://localhost:{API_PORT}", data={"length": "", "start_time": "", "checkpoints": ""})
+    contents = {
+        "start_time": request.form['Start'],
+        "length": request.form['TotalDistance'],
+        "checkpoints": request.form['Controls']
+    }
+    print("contents: ", contents, flush=True)
+    r = requests.post(f"http://api:{API_PORT}/api/Brevets", json=contents)
     print(r.status_code, flush=True)
-    return flask.Response(status=200)
+    return flask.Response(status=r.status_code)
 
 
 @app.route("/display")
 def display():
-    return flask.jsonify(brevets={"Start": "", "Total": "", "Controls": ""}, status=200)
+    return flask.jsonify(brevets={"Start": "yo", "Total": "hey", "Controls": "hasstuf"}, status=200)
 #############
 
 if __name__ == "__main__":

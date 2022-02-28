@@ -9,6 +9,8 @@ class BrevetsAPI(Resource):
     
     def post(self):
         body = request.get_json()
+        print(request, flush=True)
+        print(body, flush=True)
         brevet = Brevet(**body).save()
         id = brevet.id
         return {'id': str(id), 'status': 'created'}, 200
