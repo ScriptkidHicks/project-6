@@ -70,16 +70,14 @@ def _calc_times():
 
 @app.route("/submit", methods=['POST'])
 def Submit():
-    print("The controls", request.form, flush=True)
-    print("The Request ", request, flush=True)
+    body = request.get_json()
     contents = {
-        "start_time": request.form['Start'],
-        "length": request.form['TotalDistance'],
-        "checkpoints": request.form['Controls']
+        "start_time": body['Start'],
+        "length": body['TotalDistance'],
+        "checkpoints": body['Controls']
     }
-    print("contents: ", contents, flush=True)
     r = requests.post(f"http://api:{API_PORT}/api/Brevets", json=contents)
-    print(r.status_code, flush=True)
+    print("status code ", r.status_code, flush=True)
     return flask.Response(status=r.status_code)
 
 

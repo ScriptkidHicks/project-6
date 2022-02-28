@@ -165,7 +165,7 @@
             function MySubmit(){
                document.getElementById('err_mess').innerText = null;
                let TotalDistance = document.getElementById('brevet_dist_km').value;
-               let StartTime= document.getElementById("begin_date").value;
+               let StartTime= String(document.getElementById("begin_date").value).replace("T", " ");
                let kms = document.getElementsByName('km');
                let Miles = document.getElementsByName('miles');
                let Locations = document.getElementsByName('location');
@@ -175,12 +175,14 @@
                let controls = [];
                for (let i = 0; i<20; i++){
                   if (kms[i].value){
+                     console.log(Opens[i].value);
+                     console.log(Closes[i].value);
                      controls.push({
                         "distance": kms[i].value,
                         //"miles": Miles[i].value,
                         "location": Locations[i].value,
-                        "open_time": String(Opens[i].value),
-                        "close_time": String(Closes[i].value)});
+                        "open_time": String(Opens[i].value).replace("T", " "),
+                        "close_time": String(Closes[i].value).replace("T", " ")});
                   }
                }
                if (controls.length === 0){
@@ -197,8 +199,8 @@
                   Opens[x].value = null;
                   Closes[x].value = null;
                }
-               console.log("These are the controls " + controls[0])
-               $.ajax(SCRIPT_ROOT + "/submit", {dataType: 'json', type: "POST", data: {"Start": StartTime, "TotalDistance": TotalDistance, "Controls": controls} })
+               console.log(StartTime);
+               $.ajax(SCRIPT_ROOT + "/submit", {dataType: 'json', type: "POST", contentType: "application/json; charset=utf-8", data: JSON.stringify({"Start": StartTime, "TotalDistance": TotalDistance, "Controls": controls}) })
             }
 
             function MyDisplay(){
