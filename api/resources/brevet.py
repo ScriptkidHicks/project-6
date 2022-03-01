@@ -1,7 +1,7 @@
 from flask import Response, request
 from database import Brevet
 from flask_restful import Resource
-
+ 
 
 class BrevetAPI(Resource):
     def get(self, id):

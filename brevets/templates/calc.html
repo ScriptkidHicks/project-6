@@ -208,11 +208,13 @@
                   function(data){
                      console.log(data);
                      let Start = data.brevets['Start'];
+                     console.log(Start);
                      if (data.status === 404 || data.status === 500){
                         return;
                      }
                      let Total = data.brevets['Total'];
-                     let Controls = JSON.parse(data.brevets['Controls'])
+                     let Controls = data.brevets['Controls']
+                     console.log(Controls);
                      document.getElementById('brevet_dist_km').value = Total;
                      document.getElementById('begin_date').value = Start;
 
@@ -223,8 +225,7 @@
                      let Closes = document.getElementsByName('close');
 
                      for(let i = 0; i < Controls.length; i++){
-                        kms[i].value = Controls[i]['kms'];
-                        Miles[i].value = Controls[i]['miles'];
+                        kms[i].value = Controls[i]['distance'];
                         Locations[i].value = Controls[i]['location'];
                         Opens[i].value = Controls[i]['open_time'];
                         Closes[i].value = Controls[i]['close_time'];

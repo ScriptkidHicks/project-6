@@ -9,6 +9,7 @@ import arrow  # Replacement for datetime, based on moment.js
 import acp_times  # Brevet time calculations
 import os
 import requests
+import datetime
 ###
 # Globals
 ###
@@ -83,7 +84,8 @@ def Submit():
 
 @app.route("/display")
 def display():
-    return flask.jsonify(brevets={"Start": "yo", "Total": "hey", "Controls": "hasstuf"}, status=200)
+    body = requests.get(f"http://api:{API_PORT}/api/Brevets").json()
+    return flask.jsonify(brevets={"Start": body[-1]['start_time'], "Total": body[-1]['length'], "Controls": body[-1]['checkpoints']}, status=200)
 #############
 
 if __name__ == "__main__":
