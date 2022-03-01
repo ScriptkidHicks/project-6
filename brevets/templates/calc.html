@@ -166,6 +166,7 @@
                document.getElementById('err_mess').innerText = null;
                let TotalDistance = document.getElementById('brevet_dist_km').value;
                let StartTime= String(document.getElementById("begin_date").value).replace("T", " ");
+               console.log(StartTime)
                let kms = document.getElementsByName('km');
                let Miles = document.getElementsByName('miles');
                let Locations = document.getElementsByName('location');
@@ -207,7 +208,8 @@
                $.getJSON(SCRIPT_ROOT + "/display").done(
                   function(data){
                      console.log(data);
-                     let Start = data.brevets['Start'];
+                     let milesdistance = 0;
+                     let Start = moment(data.brevets['Start']['$date']).utc().format("YYYY-MM-DDTHH:mm").toString();
                      console.log(Start);
                      if (data.status === 404 || data.status === 500){
                         return;
@@ -226,9 +228,11 @@
 
                      for(let i = 0; i < Controls.length; i++){
                         kms[i].value = Controls[i]['distance'];
+                        milesdistance = (Controls[i]['distance'] * 0.621371).toFixed(6);
+                        Miles[i].value = milesdistance;
                         Locations[i].value = Controls[i]['location'];
-                        Opens[i].value = Controls[i]['open_time'];
-                        Closes[i].value = Controls[i]['close_time'];
+                        Opens[i].value = moment(Controls[i]['open_time']['$date']).utc().format("YYYY-MM-DDTHH:mm").toString();
+                        Closes[i].value = moment(Controls[i]['close_time']['$date']).utc().format("YYYY-MM-DDTHH:mm").toString();
                      }
                   }
                )
