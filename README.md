@@ -1,66 +1,36 @@
 # UOCIS322 - Project 6 #
 Brevet time calculator with MongoDB, and a RESTful API!
 
-Read about MongoEngine and Flask-RESTful before you start: [http://docs.mongoengine.org/](http://docs.mongoengine.org/), [https://flask-restful.readthedocs.io/en/latest/](https://flask-restful.readthedocs.io/en/latest/).
 
 ## Overview
 
-You will reuse your code from Project 5, which already has two services:
+This is a brevet calculator with a mongodb database on the backend, designed to save your most recently submitted brevet, and retrieve it when desired. Submitting will clear the board of all currently entered control points. Additionally, if you attempt to submit an empty brevet, the frontend will give you a warning at the bottom, indicating that this is not the proper use of the calculator.
 
-* Brevets
-	* The entire web service
-* MongoDB
 
-For this project, you will re-organize `Brevets` into two separate services:
+to submit a brevet you are wanting to store, simply use the `Submit` button, and to display the most recent brevet, use the `Display` button. 
 
-* Web (Front-end)
-	* Time calculator (basically everything you had in project 4)
-* API (Back-end)
-	* A RESTful service to expose/store structured data in MongoDB.
+### ACP controle times
 
-## Tasks
+This project consists of a web application that is based on RUSA's online calculator. The algorithm for calculating controle times is described here [https://rusa.org/pages/acp-brevet-control-times-calculator](https://rusa.org/pages/acp-brevet-control-times-calculator). Additional background information is given here [https://rusa.org/pages/rulesForRiders](https://rusa.org/pages/rulesForRiders). The description is ambiguous, but the examples help. Part of finishing this project is clarifying anything that is not clear about the requirements, and documenting it clearly. 
 
-* Implement a RESTful API in `api/`:
-	* Write a data schema using MongoEngine for Checkpoints and Brevets:
-		* `Checkpoint`:
-			* `distance`: float, required, (checkpoint distance in kilometers), 
-			* `location`: string, optional, (checkpoint location name), 
-			* `open_time`: datetime, required, (checkpoint opening time), 
-			* `close_time`: datetime, required, (checkpoint closing time).
-		* `Brevet`:
-			* `length`: float, required, (brevet distance in kilometers),
-			* `start_time`: datetime, required, (brevet start time),
-			* `checkpoints`: list of `Checkpoint`s, required, (checkpoints).
-	* Using the schema, build a RESTful API with the resource `/brevets/`:
-		* GET `http://API:PORT/api/brevets` should display all brevets stored in the database.
-		* GET `http://API:PORT/api/brevet/ID` should display brevet with id `ID`.
-		* POST `http://API:PORT/api/brevets` should insert brevet object in request into the database.
-		* DELETE `http://API:PORT/api/brevet/ID` should delete brevet with id `ID`.
-		* PUT `http://API:PORT/api/brevet/ID` should update brevet with id `ID` with object in request.
+We are essentially replacing the calculator here [https://rusa.org/octime_acp.html](https://rusa.org/octime_acp.html). We can also use that calculator to clarify requirements and develop test data. 
 
-* Copy over `brevets/` from your completed project 5.
-	* Replace every database related code in `brevets/` with calls to the new API.
-		* Remember: AutoGrader will ensure there is NO CONNECTION between `brevets` and `db` services. `brevets` should only operate through `api` and still function the way it did in project 5.
-		* Hint: Submit should send a POST request to the API to insert, Display should send a GET request, and display the last entry.
-	* Remove `config.py` and adjust `flask_brevets.py` to use the `PORT` and `DEBUG` values specified in env variables (see `docker-compose.yml`).
+### The logic of the calculator
 
-* Update README.md with API documentation added.
+If the distance is 0, then the opening time will be the opening time of the whole brevet, and the closing time will be an hour therafter. If the control is any other distance, then the total distance of that control will be divided by the relevant maximum and minimum speeds to provide the opening and closing times of that control. Note that while placing a control at 0 distance will result in a closing time an hour after the opening time of the race, any distance under 15km will not offer such a courtesy, and will result in a closing time before the closing time of the start of the race. It is advised that one does not do so, as a result.
 
-As always you'll turn in your `credentials.ini` through Canvas.
+## The API
+	
+The api is built on the flask restful framework. It uses a pair of models, checkpoint and brevet, with mongoengine defined fields to store information. The opening times, closing times, and start time are stored in datetime fields, and should be converted to the desired format using moment in javascript in the front end. The models are implemented through two resources, Brevet and Brevets. 
 
-## Grading Rubric
+To interact with the api, query the endpoints defined as 
+	http://api:{API_PORT}/api/Brevets
+	http://api:{API_PORT}/api/Brevet
 
-* If your code works as expected: 100 points. This includes:
-    * API routes as outlined above function exactly the way expected,
-    * Web application works as expected in project 5,
-    * README is updated with the necessary details.
-
-* If the front-end service does not work, 20 points will be docked.
-
-* For each of the 5 requests that do not work, 15 points will be docked.
-
-* If none of the above work, 5 points will be assigned assuming project builds and runs, and `README` is updated. Otherwise, 0 will be assigned.
+You will want to define the variables for your environment, the ports for both the api and the brevets flask instance in a .env file, the skeleton of which has been provided.
 
 ## Authors
 
 Michal Young, Ram Durairajan. Updated by Ali Hassani.
+
+Completed by Tammas Hicks
